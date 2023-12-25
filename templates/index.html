@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+	<meta charset="utf-8">
+	<title>Astropoint</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="navigation">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light px-0">
+      <a class="navbar-brand order-1 py-0" href="/">
+        Astropoint
+      </a>
+      <div class="navbar-actions order-3 ml-0 ml-md-4">
+        <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+          data-target="#navigation"> <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <form method="get" action="/pesquisar" class="search order-lg-3 order-md-2 order-3 ml-auto">
+        <input id="search-query" name="s" type="search" placeholder="pesquisar..." autocomplete="off">
+      </form>
+      <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+        <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+          <li class="nav-item"> <a class="nav-link" href="/360">360</a> </li>
+          <!-- <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Tópicos
+            </a>
+            <div class="dropdown-menu"> 
+              <a class="dropdown-item" href="/topico/eventos">Eventos Asstronomicos</a>
+              <a class="dropdown-item" href="/">Ferramentas de Observação</a>
+            </div>
+          </li> -->
+          {% if user is not none %}   
+            <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ user.name }}
+            </a>
+            <div class="dropdown-menu"> 
+              {% if user.is_writter is true %} 
+              <a class="dropdown-item" href="/perfil/{{ user.id }}">Perfil</a>
+              {% endif %}
+              <a class="dropdown-item" href="/logout">Sair</a>
+            </div>
+          </li>
+
+            
+          {% else %}
+          <li class="nav-item"> <a class="nav-link" href="/login">Entrar</a>
+          {% endif %}
+
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="row no-gutters-lg">
+        <div class="col-12">
+          <h2 class="section-title">Últimos Artigos</h2>
+        </div>
+        <div class="col-lg-8 mb-5 mb-lg-0">
+          <div class="row">
+            {% if articles|length == 0 %}
+            Sem artigos publicado
+            {% endif %}
+            {% for i in range(articles|length) %}
+            {% if i == 0 %}
+            <div class="col-12 mb-4">
+              <article class="card article-card">
+                <a href="article/{{articles[i].id}}">
+                  <div class="card-image">
+                    <div class="post-info"> <span class="text-uppercase">{{articles[i].publish_date}}</span>
+                    </div>
+                    <img loading="lazy" decoding="async" src= "{{ url_for('static', filename=articles[i].image[9:]) }}" alt="Post Thumbnail" class="w-100">
+                  </div>
+                </a>
+                <div class="card-body px-0 pb-1">
+                  <h2 class="h1"><a class="post-title" href="article/{{articles[i].id}}">{{articles[i].title}}</a></h2>
+                  <p class="card-text">{{articles[i].content[:190]}}</p>
+                  <div class="content"> 
+                  </div>
+                </div>
+              </article>
+            </div>
+            
+            {% else %}
+            <div class="col-md-6 mb-4">
+              <article class="card article-card article-card-sm h-100">
+                <a href="article/{{articles[i].id}}">
+                  <div class="card-image">
+                    <div class="post-info"> <span class="text-uppercase">{{articles[i].publish_date}}</span>
+                    </div>
+                    <img loading="lazy" decoding="async" src="{{ url_for('static', filename=articles[i].image[9:]) }}" alt="Post Thumbnail" class="w-100">
+                  </div>
+                </a>
+                <div class="card-body px-0 pb-0">
+                  <h2><a class="post-title" href="article/{{articles[i].id}}">{{articles[i].title}}</a></h2>
+                  <p class="card-text"> {{articles[i].content[:190]}}</p>
+                  <div class="content">
+                  </div>
+                </div>
+              </article>
+            </div>
+            {% endif %}
+            {% endfor %}
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <nav class="mt-4">
+                    <!-- <nav class="mb-md-50">
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                          <a class="page-link" href="#!" aria-label="Pagination Arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                            </svg>
+                          </a>
+                        </li>
+                        <li class="page-item active "> <a href="index.html" class="page-link">
+                            1
+                          </a>
+                        </li>
+                        <li class="page-item"> <a href="#!" class="page-link">
+                            2
+                          </a>
+                        </li>
+                        <li class="page-item">
+                          <a class="page-link" href="#!" aria-label="Pagination Arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+                            </svg>
+                          </a>
+                        </li>
+                      </ul>
+                    </nav> -->
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+  <div class="widget-blocks">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="widget">
+          <div class="widget-body">
+            <img loading="lazy" decoding="async" src="https://static.independent.co.uk/2022/03/16/18/newFile-5.jpg" alt="" class="w-100 author-thumb-sm d-block">
+            <h2 class="widget-title my-3">Grupo 1</h2>
+            <p class="mb-3 pb-2">descidimos criar este site informativo para saber mais sobre astroniomia</p> 
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-6">
+        <div class="widget">
+          <h2 class="section-title mb-3">Recomendado</h2>
+          <div class="widget-body">
+            <div class="widget-list">
+              {% for i in range(articles|length) %}
+              <a class="media align-items-center" href="article/{{articles[(articles|length)-(i+1)].id}}">
+                <img loading="lazy" decoding="async" src="{{ url_for('static', filename=articles[(articles|length)-(i+1)].image[9:]) }}" alt="Post Thumbnail" class="w-100">
+                <div class="media-body ml-3">
+                  <h3 style="margin-top:-5px">{{articles[(articles|length)-(i+1)].title}}</h3>
+                  <p class="mb-0 small">{{articles[(articles|length)-(i+1)].content[:60]}}</p>
+                </div>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-dark mt-5">
+  <div class="container section">
+  
+  </div>
+</footer>
+
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

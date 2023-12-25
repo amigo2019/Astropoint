@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+	<meta charset="utf-8">
+	<title>Astropoint</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+	<header class="navigation">
+		<div class="container">
+		  <nav class="navbar navbar-expand-lg navbar-light px-0">
+			<a class="navbar-brand order-1 py-0" href="/">
+			  Astropoint
+			</a>
+			<div class="navbar-actions order-3 ml-0 ml-md-4">
+			  <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+				data-target="#navigation"> <span class="navbar-toggler-icon"></span>
+			  </button>
+			</div>
+			<form method="get" action="/pesquisar" class="search order-lg-3 order-md-2 order-3 ml-auto">
+			  <input id="search-query" name="s" type="search" placeholder="pesquisar..." autocomplete="off">
+			</form>
+			<div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+			  <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+				<li class="nav-item"> <a class="nav-link" href="/360">360</a> </li>
+				<!-- <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Tópicos
+				  </a>
+				  <div class="dropdown-menu"> 
+					<a class="dropdown-item" href="/topico/eventos">Eventos Asstronomicos</a>
+					<a class="dropdown-item" href="/">Ferramentas de Observação</a>
+				  </div>
+				</li> -->
+				{% if user is not none %}   
+				  <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ user.name }}
+				  </a>
+				  <div class="dropdown-menu"> 
+					{% if user.is_writter is true %} 
+					<a class="dropdown-item" href="/perfil/{{ user.id }}">Perfil</a>
+					{% endif %}
+					<a class="dropdown-item" href="/logout">Sair</a>
+				  </div>
+				</li>
+	  
+				  
+				{% else %}
+				<li class="nav-item"> <a class="nav-link" href="/login">Entrar</a>
+				{% endif %}
+	  
+				</li>
+			  </ul>
+			</div>
+		  </nav>
+		</div>
+	  </header>
+
+<main>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="pr-0 pr-lg-4">
+						
+						<div class="content">
+							<!-- <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style="width: 150px;" alt="Avatar" /> -->
+							<div class="mt-5">
+								<text class="h3 mb-3 font-weight-normal">{{user.name}}</text>
+								<p class="h3 mb-3 font-weight-normal"><a class="text-dark" href="mailto:hello@reporter.com">{{user.email}}</a>
+								</p>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<button class="btn btn-outline-primary" onclick="window.location.href='/new_article';">Publicar novo artigo</button>
+						</div>
+					</div>
+				</div>
+				{% if user.articles|length == 0 %}
+				 Escritor sem artigos publicado
+				{% endif %}
+				{% for article in user.articles %}
+				  <div class="col-md-6 mb-4">
+					<article class="card article-card article-card-sm h-100">
+					  <a href="article/{{article.id}}">
+						<div class="card-image">
+						  <div class="post-info"> 
+							<span class="text-uppercase">{{article.publish_date}}</span>
+						  </div>
+						  <img loading="lazy" decoding="async" src="{{ url_for('static', filename=article.image[9:]) }}" alt="" class="w-100">
+						</div>
+					  </a>
+					  <div class="card-body px-0 pb-0">
+						<h2><a class="post-title" href="article/{{article.id}}">{{article.title}}</a></h2>
+						<p class="card-text">{{article.content[:190]}}</p>
+						</div>
+					  </div>
+					</article>
+				  </div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer class="bg-dark mt-5">
+  <div class="container section">
+   
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

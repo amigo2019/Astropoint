@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+	<meta charset="utf-8">
+	<title>Astropoint</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+	<header class="navigation">
+		<div class="container">
+		  <nav class="navbar navbar-expand-lg navbar-light px-0">
+			<a class="navbar-brand order-1 py-0" href="/">
+			  Astropoint
+			</a>
+			<div class="navbar-actions order-3 ml-0 ml-md-4">
+			  <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+				data-target="#navigation"> <span class="navbar-toggler-icon"></span>
+			  </button>
+			</div>
+			<form method="get" action="/pesquisar" class="search order-lg-3 order-md-2 order-3 ml-auto">
+			  <input id="search-query" name="s" type="search" placeholder="pesquisar..." autocomplete="off">
+			</form>
+			<div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+			  <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+				<li class="nav-item"> <a class="nav-link" href="/360">360</a> </li>
+				<!-- <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Tópicos
+				  </a>
+				  <div class="dropdown-menu"> 
+					<a class="dropdown-item" href="/topico/eventos">Eventos Asstronomicos</a>
+					<a class="dropdown-item" href="/">Ferramentas de Observação</a>
+				  </div>
+				</li> -->
+				{% if user is not none %}   
+				  <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{ user.name }}
+				  </a>
+				  <div class="dropdown-menu"> 
+					{% if user.is_writter is true %} 
+					<a class="dropdown-item" href="/perfil/{{ user.id }}">Perfil</a>
+					{% endif %}
+					<a class="dropdown-item" href="/logout">Sair</a>
+				  </div>
+				</li>
+	  
+				  
+				{% else %}
+				<li class="nav-item"> <a class="nav-link" href="/login">Entrar</a>
+				{% endif %}
+	  
+				</li>
+			  </ul>
+			</div>
+		  </nav>
+		</div>
+	  </header>
+<main>
+	<section class="section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 mb-5 mb-lg-0">
+					<article>
+						<img loading="lazy" decoding="async" src="{{ url_for('static', filename=article.image[9:]) }}" alt="" class="w-100">
+						<ul class="post-meta mb-2 mt-4">
+							<li>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="margin-right:5px;margin-top:-4px" class="text-dark" viewBox="0 0 16 16">
+									<path d="M5.5 10.5A.5.5 0 0 1 6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
+									<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+									<path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+								</svg> <span>{{article.publish_date}}</span>
+							</li>
+						</ul>
+						<ul class="post-meta mb-2 mt-4">
+							<li>
+								Escrito por <span>{{results[0].name}}</span>
+							</li>
+						</ul>
+						
+						<h1 class="my-3">{{article.title}}</h1>
+						
+						<div class="content text-left">
+							<p>{{article.content}}</p>
+						</div>
+
+						<section style="background-color: #eee;">
+							<div class="container my-5 py-5">
+							  <div class="row d-flex justify-content-center">
+								<div class="col-md-12 col-lg-6 col-xl-8">
+								  <div class="card">
+									{% for r in results %}
+									{% for comment in r.comments %}
+									<div class="card-body">
+									  <div class="d-flex flex-start align-items-center">
+										<div>
+										  <h6 class="fw-bold text-primary mb-1">{{r.name}}</h6>
+										  <p class="text-muted small mb-0"> {{comment.date}} </p>
+										</div>
+									  </div>
+						  
+									  <p class="mt-3 mb-4 pb-2">
+										{{comment.message}}
+									  </p>
+									</div>
+									{% endfor %}
+									{% endfor %}
+									{% if user is not none %}
+									<div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+									<form method="post" class="row" enctype='multipart/form-data'>
+										
+										<div class="d-flex flex-start w-100">
+											<div class="form-outline w-100">
+											<input  style="width: 100%; height: 60px;" class="form-control" id="textAreaExample" name="message" rows="4" style="background: #fff;" />
+											<label class="form-label" for="textAreaExample">Messagem</label>
+											</div>
+										</div>
+										<div class="float-end mt-2 pt-1">
+											<button type="submit" class="btn btn-primary btn-sm">Comentar</button>
+											<!-- <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button> -->
+										</div>
+										
+									</form>
+								</div>
+									{% endif %}
+								  </div>
+								</div>
+							  </div>
+							</div>
+						  </section>
+					</article>
+				</div>
+     
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer class="bg-dark mt-5">
+  <div class="container section">
+   
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

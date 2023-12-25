@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+	<meta charset="utf-8">
+	<title>Astropoint</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Neuton:wght@700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+  <header class="navigation">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light px-0">
+        <a class="navbar-brand order-1 py-0" href="/">
+          Astropoint
+        </a>
+        <div class="navbar-actions order-3 ml-0 ml-md-4">
+          <button aria-label="navbar toggler" class="navbar-toggler border-0" type="button" data-toggle="collapse"
+            data-target="#navigation"> <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <form method="get" action="/pesquisar" class="search order-lg-3 order-md-2 order-3 ml-auto">
+          <input id="search-query" name="s" type="search" placeholder="pesquisar..." autocomplete="off">
+        </form>
+        <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
+          <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
+            <li class="nav-item"> <a class="nav-link" href="/360">360</a> </li>
+            <!-- <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Tópicos
+              </a>
+              <div class="dropdown-menu"> 
+                <a class="dropdown-item" href="/topico/eventos">Eventos Asstronomicos</a>
+                <a class="dropdown-item" href="/">Ferramentas de Observação</a>
+              </div>
+            </li> -->
+            {% if user is not none %}   
+              <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.name }}
+              </a>
+              <div class="dropdown-menu"> 
+                {% if user.is_writter is true %} 
+                <a class="dropdown-item" href="/perfil/{{ user.id }}">Perfil</a>
+                {% endif %}
+                <a class="dropdown-item" href="/logout">Sair</a>
+              </div>
+            </li>
+  
+              
+            {% else %}
+            <li class="nav-item"> <a class="nav-link" href="/login">Entrar</a>
+            {% endif %}
+  
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+<main>
+	
+	  	
+	<section class="section">
+		{% if message!="" %}
+			{% if message=="Artigo salvo" %}
+			<div class="alert alert-success" role="alert">
+				Artigo salvo
+			</div>
+			{% endif %}
+			{% if message!="Artigo salvo" %}
+			<div class="alert alert-danger" role="alert">
+				{{message}}
+			</div>
+			{% endif %}
+		{% endif %}
+		<div class="d-flex justify-content-center">
+			
+			<form method="post" class="row" enctype='multipart/form-data'>
+				<p class="h3 mb-3 font-weight-normal">Por favor escrever o seu artigo que gostaria de postar</p>
+				<div class="col-12">
+					<label class="form-label" for="customFile">Upload imagem do articlo</label>
+					<input type="file" name="file" class="form-control" id="customFile" />
+				</div>
+				<div class="col-12">
+					<input type="text" class="form-control mb-4" placeholder="Titulo" name="title" id="subject">
+				</div>
+				<div class="col-12">
+					<textarea name="content" id="message" class="form-control mb-4" placeholder="digite o conteudo" rows="5"></textarea>
+				</div>
+				<div class="col-12">
+					<button class="btn btn-outline-primary" type="submit">Salvar</button>
+				</div>
+			</form>
+		</div>
+	</section>
+</main>
+
+<footer class="bg-dark mt-5">
+  <div class="container section">
+  
+  </div>
+</footer>
+
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
