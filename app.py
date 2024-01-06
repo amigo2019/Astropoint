@@ -4,8 +4,8 @@ from flask_login import LoginManager, current_user, logout_user, login_user, log
 import uuid 
 from datetime import datetime
 from werkzeug.utils import secure_filename
-import os
-
+import pandas as pd
+from sqlalchemy import or_
 login_manager = LoginManager()
 # create the extension
 db = SQLAlchemy()
@@ -140,7 +140,7 @@ def pesquisar():
 
     args = request.args
 
-    results = Article.query.filter(Article.title.contains(args["s"])).all()
+    results = Article.query.filter(or_(Article.title.contains(args["s"]),Article.content.contains(args["s"]))).all()
 
     return render_template("search.html", user=user, results=results)
 
@@ -221,6 +221,38 @@ def new_article():
 def page_360():
     
     return render_template("solar_system.html")
+
+@app.route('/estatistica', methods=['GET'])
+def estatistica():
+    user = None
+
+    if current_user.is_authenticated:
+        user = current_user
+
+    df = pd.read_csv("data/final_data.csv", delimiter=",")
+
+    df['Distance'] = df['Distance'].str.replace(',','')
+    #df['Mass'] = df['Mass'].str.replace(',','')
+    df['Radius'] = df['Radius'].str.replace(',','')
+
+    df['Mass'] = df['Mass'].astype(float)
+    df['Radius'] = df['Radius'].astype(float)
+    df['Distance'] = df['Distance'].astype(float)
+    
+    
+    data = df.to_dict("records")
+
+    df = df[df.Star_name!="Sun"]
+
+    planetas_mais_distantes = df.sort_values(by=["Distance"], ascending=True).head(5)
+    planetas_mais_distantes = planetas_mais_distantes.to_dict("records")
+
+    planetas_mais_pesados = df.sort_values(by=["Mass"], ascending=False).head(5)
+    planetas_mais_pesados = planetas_mais_pesados.to_dict("records")
+
+
+    return render_template("estatistica.html", user=user, dados_da_tabela=data, planetas_mais_distantes=planetas_mais_distantes, planetas_mais_pesados=planetas_mais_pesados)
+
 
 @app.route('/registar', methods=['GET', 'POST'])
 def register():

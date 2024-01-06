@@ -5,6 +5,21 @@
  * GITHUB: https://github.com/themefisher/
  */
 
+
+
+@media (min-width: 992px) {
+  .content {
+      width: calc(100% - 250px);
+      margin: auto;
+      transition: 0.5s;
+  }
+
+  .content.open {
+      width: 100%;
+      margin-left: 0;
+  }
+}
+
 /*  typography */
 body {
   line-height: 1.6;
