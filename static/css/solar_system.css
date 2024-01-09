@@ -1397,7 +1397,7 @@ h1 {
   transition-delay: .7s; }
 
 #controls {
-  transition-delay: 1s; }
+  transition-delay: 0s; }
 
 /* --------------------------------------------------------------------------- images */
 body {
@@ -1468,7 +1468,7 @@ body {
 
   #controls {
     padding-right: 32px;
-    top: 12px; }
+    top: 220px; }
 
   #data {
     position: fixed;

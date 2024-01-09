@@ -219,8 +219,12 @@ def new_article():
 
 @app.route('/360', methods=['GET'])
 def page_360():
-    
-    return render_template("solar_system.html")
+    user = None
+
+    if current_user.is_authenticated:
+        user = current_user
+
+    return render_template("solar_system.html",user=user)
 
 @app.route('/estatistica', methods=['GET'])
 def estatistica():
