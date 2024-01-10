@@ -6,6 +6,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 import pandas as pd
 from sqlalchemy import or_
+
 login_manager = LoginManager()
 # create the extension
 db = SQLAlchemy()
@@ -113,12 +114,6 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/protected')
-@login_required
-def protected():
-    return 'Logged in as: ' + current_user
-
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -187,7 +182,7 @@ def new_article():
 
     if request.method == 'POST':
         # check if the post request has the file part
-        print(request.files)
+        
         if 'file' not in request.files:
             message = 'No file part'
             #return redirect(request.url)
