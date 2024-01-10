@@ -98,6 +98,7 @@
 								  <div class="card">
 									{% for r in results %}
 									{% for comment in r.comments %}
+									{% if comment.article_id == aritcle_id %}
 									<div class="card-body">
 									  <div class="d-flex flex-start align-items-center">
 										<div>
@@ -110,6 +111,7 @@
 										{{comment.message}}
 									  </p>
 									</div>
+									{% endif %}
 									{% endfor %}
 									{% endfor %}
 									{% if user is not none %}

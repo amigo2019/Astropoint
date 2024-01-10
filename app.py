@@ -167,9 +167,9 @@ def article(id):
 
 
     article = Article.query.filter_by(id=id).first()
-    results = User.query.filter_by(id=article.writter_id).all()
-
-    return render_template("article.html", user=user, article=article, results=results)
+    results = User.query.filter_by().all()
+    
+    return render_template("article.html", user=user, article=article, results=results, aritcle_id=id)
 
 
 @app.route('/new_article', methods=['GET', 'POST'])
